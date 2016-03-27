@@ -27,9 +27,39 @@ public:
 
     /// Default Constructor
     ///
-    exit_handler_cpuidcount() {}
+    exit_handler_cpuidcount() :
+        m_count(0)
+    { }
 
     /// Destructor
     ///
-    virtual ~exit_handler_cpuidcount() {}
+    /// On destruction, this class prints out the total number of cpuids
+    /// that have occured after the VMM was started. Note that when the
+    /// exit handler is destroyed, the vCPU's debug ring is already gone,
+    /// so the "dump" command will not print out this message (both the
+    /// constructors, and destructors have this issue). You will see this
+    /// message being broadcast over serial.
+    ///
+    virtual ~exit_handler_cpuidcount()
+    {
+        bfdebug << "cpuid count = " << m_count << bfendl;
+    }
+
+    /// Handle CPUID
+    ///
+    /// When each cpuid is executed, we increment a count. This cound will
+    /// be shown when the exit handle is destroyed. Note that we call the
+    /// base class here to handle cpuid for us. We could however run the
+    /// cpuid instruction ourselves, and for example, change the result if
+    /// we wanted.
+    ///
+    virtual void handle_cpuid()
+    {
+        m_count++;
+        exit_handler_intel_x64::handle_cpuid();
+    }
+
+private:
+
+    int64_t m_count;
 };
