@@ -2,7 +2,9 @@
 
 ## Description
 
-This example demonstrates how to extend the bareflank hypervisor to print the number of CPUID instructions that have executed from when the hypervisor was started, to when it was stopped. 
+This example demonstrates how to extend the bareflank hypervisor to print the number of CPUID instructions that have executed from when the hypervisor was started, to when it was stopped. For more information on how Bareflank extensions work, please see the following:
+
+[API Documentation](http://bareflank.github.io/hypervisor/html/)
 
 ## Compilation / Usage
 
