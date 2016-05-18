@@ -53,7 +53,7 @@ public:
     /// cpuid instruction ourselves, and for example, change the result if
     /// we wanted.
     ///
-    virtual void handle_cpuid()
+    virtual void handle_cpuid() override
     {
         m_count++;
         exit_handler_intel_x64::handle_cpuid();
