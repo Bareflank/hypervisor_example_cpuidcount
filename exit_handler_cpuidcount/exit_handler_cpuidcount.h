@@ -19,6 +19,9 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+#ifndef EXIT_HANDLER_CPUIDCOUNT_H
+#define EXIT_HANDLER_CPUIDCOUNT_H
+
 #include <exit_handler/exit_handler_intel_x64.h>
 
 class exit_handler_cpuidcount : public exit_handler_intel_x64
@@ -53,7 +56,7 @@ public:
     /// cpuid instruction ourselves, and for example, change the result if
     /// we wanted.
     ///
-    virtual void 
+    virtual void
     handle_cpuid() override
     {
         m_count++;
@@ -64,3 +67,5 @@ private:
 
     int64_t m_count;
 };
+
+#endif
