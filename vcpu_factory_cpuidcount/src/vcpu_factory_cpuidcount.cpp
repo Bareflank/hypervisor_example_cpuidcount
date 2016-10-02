@@ -24,8 +24,9 @@
 #include <exit_handler_cpuidcount/exit_handler_cpuidcount.h>
 
 std::shared_ptr<vcpu>
-vcpu_factory::make_vcpu(uint64_t vcpuid)
+vcpu_factory::make_vcpu(uint64_t vcpuid, void *attr)
 {
+    (void)attr;
     auto exit_handler = std::make_shared<exit_handler_cpuidcount>();
 
     // Return a vCPU with our custom objects instead of the defaults which
@@ -34,6 +35,8 @@ vcpu_factory::make_vcpu(uint64_t vcpuid)
                                             nullptr,
                                             nullptr,
                                             nullptr,
+                                            nullptr,
                                             exit_handler,
+                                            nullptr,
                                             nullptr);
 }
