@@ -23,20 +23,18 @@
 #include <vcpu/vcpu_intel_x64.h>
 #include <exit_handler_cpuidcount/exit_handler_cpuidcount.h>
 
-std::shared_ptr<vcpu>
-vcpu_factory::make_vcpu(uint64_t vcpuid, void *attr)
+std::unique_ptr<vcpu>
+vcpu_factory::make_vcpu(vcpuid::type vcpuid, user_data *data)
 {
-    (void)attr;
-    auto exit_handler = std::make_shared<exit_handler_cpuidcount>();
+    auto &&my_exit_handler = std::make_unique<exit_handler_cpuidcount>();
 
-    // Return a vCPU with our custom objects instead of the defaults which
-    // are represented by the null pointers.
-    return std::make_shared<vcpu_intel_x64>(vcpuid,
-                                            nullptr,
-                                            nullptr,
-                                            nullptr,
-                                            nullptr,
-                                            exit_handler,
-                                            nullptr,
-                                            nullptr);
+    (void) data;
+    return std::make_unique<vcpu_intel_x64>(
+               vcpuid,
+               nullptr,                         // default debug_ring
+               nullptr,                         // default vmxon
+               nullptr,                         // default vmcs
+               std::move(my_exit_handler),
+               nullptr,                         // default vmm_state
+               nullptr);                        // default guest_state
 }
