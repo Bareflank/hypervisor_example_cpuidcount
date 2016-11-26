@@ -11,41 +11,29 @@ extensions work, please see the following:
 
 ## Compilation / Usage
 
-To setup our extension, we can either clone the extension into the Bareflank
-root folder and run make, or we can use the configure script to create an
-out-of-tree build environment that has our extension setup for easy development.
-Note that using the later approach, we can have more than one build
-environment (the following assumes this is running on Linux).
+To setup our extension, run the following:
 
 ```
 cd ~/
 git clone https://github.com/Bareflank/hypervisor.git
-git clone https://github.com/Bareflank/hypervisor_example_cpuidcount.git
 cd ~/hypervisor
+git clone https://github.com/Bareflank/hypervisor_example_cpuidcount.git
 
 ./tools/scripts/setup-<xxx>.sh --no-configure
-sudo reboot
-
-cd ~/
-mkdir build
-cd ~/build
-
-~/hypervisor/configure -m ~/hypervisor_example_cpuidcount/bin/cpuidcount.modules -e ~/hypervisor_example_cpuidcount
+~/hypervisor/configure -m ~/hypervisor_example_cpuidcount/bin/cpuidcount.modules
 
 make
-make unittest
 ```
 
 To test out our extended version of Bareflank, all we need to do is run the
-make shortcuts as usual:
+following make shortcuts:
 
 ```
-make linux_load
+make driver_load
 make quick
 
-make status
-make dump
+ARGS="string json '{\"get\":\"count\"}'" make vmcall
 
 make stop
-make linux_unload
+make driver_load
 ```
