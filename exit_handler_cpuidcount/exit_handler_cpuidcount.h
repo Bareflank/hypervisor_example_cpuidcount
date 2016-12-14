@@ -74,13 +74,16 @@ public:
     /// the cpuid count if the request is correct, otherwise I toss
     /// up an error.
     ///
-    void handle_vmcall_data_string_json(
-        vmcall_registers_t &regs, const json &str,
-        const bfn::unique_map_ptr_x64<char> &omap) override
+    void
+    handle_vmcall_data_string_json(
+        const json &ijson, json &ojson)
     {
-        if (str["get"] == "count")
-            return reply_with_json(regs, json{{"count", m_count}}, omap);
-
+        if (ijson.at("get") == "count")
+        {
+            ojson = {m_count};
+            return;
+        }
+        
         throw std::runtime_error("unknown JSON command");
     }
 
