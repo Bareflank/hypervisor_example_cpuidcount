@@ -11,7 +11,7 @@ extensions work, please see the following:
 
 ## Compilation / Usage
 
-To setup our extension, run the following:
+To setup our extension, run the following (assuming Linux):
 
 ```
 cd ~/
@@ -20,8 +20,9 @@ cd ~/hypervisor
 git clone https://github.com/Bareflank/hypervisor_example_cpuidcount.git
 
 ./tools/scripts/setup-<xxx>.sh --no-configure
-~/hypervisor/configure -m ~/hypervisor_example_cpuidcount/bin/cpuidcount.modules
+sudo reboot
 
+~/hypervisor/configure -m ~/hypervisor_example_cpuidcount/bin/cpuidcount.modules
 make
 ```
 
