@@ -76,14 +76,14 @@ public:
     ///
     void
     handle_vmcall_data_string_json(
-        const json &ijson, json &ojson)
+        const json &ijson, json &ojson) override
     {
         if (ijson.at("get") == "count")
         {
             ojson = {m_count};
             return;
         }
-        
+
         throw std::runtime_error("unknown JSON command");
     }
 
