@@ -36,5 +36,5 @@ make quick
 ARGS="string json '{\"get\":\"count\"}'" make vmcall
 
 make stop
-make driver_load
+make driver_unload
 ```
