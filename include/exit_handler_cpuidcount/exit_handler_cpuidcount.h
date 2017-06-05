@@ -23,7 +23,7 @@
 #define EXIT_HANDLER_CPUIDCOUNT_H
 
 #include <exit_handler/exit_handler_intel_x64.h>
-#include <vmcs/vmcs_intel_x64_32bit_read_only_data_fields.h>
+#include <intrinsics/x86/intel/vmcs/32bit_read_only_data_fields.h>
 
 using namespace intel_x64;
 
