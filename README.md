@@ -11,30 +11,47 @@ extensions work, please see the following:
 
 ## Compilation / Usage
 
-To setup our extension, run the following (assuming Linux):
+First, you'll need to set up and build the [core Bareflank Hypervisor](https://github.com/bareflank/hypervisor),
+including [its SDK](https://github.com/bareflank/bfsdk).
 
-```
-cd ~/
-git clone https://github.com/Bareflank/hypervisor.git
-cd ~/hypervisor
+Once you have a working Bareflank build environment, building the extension is 
+easy:
+
+```sh
 git clone https://github.com/Bareflank/hypervisor_example_cpuidcount.git
 
-./tools/scripts/setup-<xxx>.sh --no-configure
-sudo reboot
+cd hypervisor_example_cpuidcount
+mkdir build
+cd build
 
-~/hypervisor/configure -m ~/hypervisor_example_cpuidcount/bin/cpuidcount.modules
-make
+# Adjust the line below if you've installed to a non-default bfprefix location.
+cmake .. -D DCMAKE_TOOLCHAIN_FILE=~/bfprefix/cmake/CMakeToolchain_VMM.txt
+make install
 ```
 
-To test out our extended version of Bareflank, all we need to do is run the
-following make shortcuts:
+We're now ready to start our extended hypervisor. As with Bareflank itself,
+the easiest way to launch the hypervisor is with the ```bfm quick``` command:
+but there's minor twist, as we'll need to instruct bfm to prefer our extended
+libraries:
+
+```sh
+# From your build directory
+sudo BF_LIBRARY_PATH="$(pwd)/lib" bfm quick
+```
+
+We can now use a vmcall to request the number of CPUIDs experienced thus far:
+
+```sh
+sudo bfm vmcall string json '{"get":"count"}'
+```
+
+The result should include the number of elapsed CPUID instructions:
 
 ```
-make driver_load
-make quick
-
-ARGS="string json '{\"get\":\"count\"}'" make vmcall
-
-make stop
-make driver_unload
+received from vmm:
+[
+    154
+]
 ```
+
+
