@@ -22,8 +22,8 @@
 #ifndef EXIT_HANDLER_CPUIDCOUNT_H
 #define EXIT_HANDLER_CPUIDCOUNT_H
 
+#include <bfdebug.h>
 #include <exit_handler/exit_handler_intel_x64.h>
-#include <vmcs/vmcs_intel_x64_32bit_read_only_data_fields.h>
 
 using namespace intel_x64;
 
@@ -33,9 +33,7 @@ public:
 
     /// Default Constructor
     ///
-    exit_handler_cpuidcount() :
-        m_count(0)
-    { }
+    exit_handler_cpuidcount() = default;
 
     /// Destructor
     ///
@@ -47,7 +45,7 @@ public:
     /// message being broadcast over serial.
     ///
     ~exit_handler_cpuidcount() override
-    { bfdebug << "cpuid count = " << m_count << bfendl; }
+    { bfdebug_ndec(0, "cpuid count", m_count); }
 
     /// Handle CPUID
     ///
@@ -59,8 +57,9 @@ public:
     ///
     void handle_exit(intel_x64::vmcs::value_type reason) override
     {
-        if (reason == vmcs::exit_reason::basic_exit_reason::cpuid)
+        if (reason == vmcs::exit_reason::basic_exit_reason::cpuid) {
             m_count++;
+        }
 
         exit_handler_intel_x64::handle_exit(reason);
     }
@@ -78,8 +77,7 @@ public:
     handle_vmcall_data_string_json(
         const json &ijson, json &ojson) override
     {
-        if (ijson.at("get") == "count")
-        {
+        if (ijson.at("get") == "count") {
             ojson = {m_count};
             return;
         }
@@ -89,7 +87,7 @@ public:
 
 private:
 
-    int64_t m_count;
+    uint64_t m_count{0};
 };
 
 #endif

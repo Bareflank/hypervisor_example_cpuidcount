@@ -16,25 +16,35 @@ To setup our extension, run the following (assuming Linux):
 ```
 cd ~/
 git clone https://github.com/Bareflank/hypervisor.git
-cd ~/hypervisor
+mkdir ~/hypervisor/build; cd ~/hypervisor/build
+cmake ..; make; make driver_quick
+
+cd ~/
 git clone https://github.com/Bareflank/hypervisor_example_cpuidcount.git
+mkdir ~/hypervisor_example_cpuidcount/build; cd ~/hypervisor_example_cpuidcount/build
 
-./tools/scripts/setup-<xxx>.sh --no-configure
-sudo reboot
+cmake \
+    -DBAREFLANK_SOURCE_DIR=~/hypervisor \
+    -DBAREFLANK_BINARY_DIR=~/hypervisor/build \
+    -DCMAKE_INSTALL_PREFIX=~/hypervisor/build/bfprefix/ \
+    -DCMAKE_TOOLCHAIN_FILE=~/hypervisor/bfsdk/cmake/CMakeToolchain_VMM_40.txt \
+    ..
 
-~/hypervisor/configure -m ~/hypervisor_example_cpuidcount/bin/cpuidcount.modules
 make
+
+sudo ~/hypervisor/build/bfprefix/bin/bfm load example_vmm
 ```
 
 To test out our extended version of Bareflank, all we need to do is run the
-following make shortcuts:
+following (assuming Linux):
 
 ```
-make driver_load
-make quick
+sudo ~/hypervisor/build/bfprefix/bin/bfm load example_vmm
+sudo ~/hypervisor/build/bfprefix/bin/bfm start
 
-ARGS="string json '{\"get\":\"count\"}'" make vmcall
+sudo ~/hypervisor/build/bfprefix/bin/bfm status
+sudo ~/hypervisor/build/bfprefix/bin/bfm dump
 
-make stop
-make driver_unload
+sudo ~/hypervisor/build/bfprefix/bin/bfm stop
+sudo ~/hypervisor/build/bfprefix/bin/bfm dump
 ```

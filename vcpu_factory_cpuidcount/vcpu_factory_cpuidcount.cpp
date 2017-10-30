@@ -21,7 +21,7 @@
 
 #include <vcpu/vcpu_factory.h>
 #include <vcpu/vcpu_intel_x64.h>
-#include <exit_handler_cpuidcount/exit_handler_cpuidcount.h>
+#include "../exit_handler_cpuidcount/exit_handler_cpuidcount.h"
 
 std::unique_ptr<vcpu>
 vcpu_factory::make_vcpu(vcpuid::type vcpuid, user_data *data)
@@ -31,7 +31,6 @@ vcpu_factory::make_vcpu(vcpuid::type vcpuid, user_data *data)
     (void) data;
     return std::make_unique<vcpu_intel_x64>(
                vcpuid,
-               nullptr,                         // default debug_ring
                nullptr,                         // default vmxon
                nullptr,                         // default vmcs
                std::move(my_exit_handler),
