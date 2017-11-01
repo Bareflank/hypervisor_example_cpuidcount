@@ -14,37 +14,29 @@ extensions work, please see the following:
 To setup our extension, run the following (assuming Linux):
 
 ```
-cd ~/
-git clone https://github.com/Bareflank/hypervisor.git
-mkdir ~/hypervisor/build; cd ~/hypervisor/build
-cmake ..; make; make driver_quick
-
-cd ~/
-git clone https://github.com/Bareflank/hypervisor_example_cpuidcount.git
-mkdir ~/hypervisor_example_cpuidcount/build; cd ~/hypervisor_example_cpuidcount/build
-
-cmake \
-    -DBAREFLANK_SOURCE_DIR=~/hypervisor \
-    -DBAREFLANK_BINARY_DIR=~/hypervisor/build \
-    -DCMAKE_INSTALL_PREFIX=~/hypervisor/build/bfprefix/ \
-    -DCMAKE_TOOLCHAIN_FILE=~/hypervisor/bfsdk/cmake/CMakeToolchain_VMM_40.txt \
-    ..
-
-make
-
-sudo ~/hypervisor/build/bfprefix/bin/bfm load example_vmm
+git clone -b dev https://github.com/Bareflank/hypervisor_example_cpuidcount.git example
+mkdir example/build; cd example/build
+cmake ..
+make -j<# cores + 1>
 ```
 
-To test out our extended version of Bareflank, all we need to do is run the
-following (assuming Linux):
+To test out our extended version of Bareflank, run the following commands:
 
 ```
-sudo ~/hypervisor/build/bfprefix/bin/bfm load example_vmm
-sudo ~/hypervisor/build/bfprefix/bin/bfm start
+make driver_quick
+make quick
+```
 
-sudo ~/hypervisor/build/bfprefix/bin/bfm status
-sudo ~/hypervisor/build/bfprefix/bin/bfm dump
+to get status information, use the following:
 
-sudo ~/hypervisor/build/bfprefix/bin/bfm stop
-sudo ~/hypervisor/build/bfprefix/bin/bfm dump
+```
+make status
+make dump
+```
+
+to reverse this:
+
+```
+make unload
+make driver_unload
 ```

@@ -1,9 +1,6 @@
 //
 // Bareflank Hypervisor Examples
-//
 // Copyright (C) 2015 Assured Information Security, Inc.
-// Author: Rian Quinn        <quinnr@ainfosec.com>
-// Author: Brendan Kerrigan  <kerriganb@ainfosec.com>
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,13 +16,10 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-#ifndef EXIT_HANDLER_CPUIDCOUNT_H
-#define EXIT_HANDLER_CPUIDCOUNT_H
+#include <vcpu/vcpu_factory.h>
 
-#include <bfdebug.h>
+#include <vcpu/vcpu_intel_x64.h>
 #include <exit_handler/exit_handler_intel_x64.h>
-
-using namespace intel_x64;
 
 class exit_handler_cpuidcount : public exit_handler_intel_x64
 {
@@ -45,7 +39,9 @@ public:
     /// message being broadcast over serial.
     ///
     ~exit_handler_cpuidcount() override
-    { bfdebug_ndec(0, "cpuid count", m_count); }
+    {
+        bfdebug_ndec(0, "cpuid count", m_count);
+    }
 
     /// Handle CPUID
     ///
@@ -57,7 +53,7 @@ public:
     ///
     void handle_exit(intel_x64::vmcs::value_type reason) override
     {
-        if (reason == vmcs::exit_reason::basic_exit_reason::cpuid) {
+        if (reason == intel_x64::vmcs::exit_reason::basic_exit_reason::cpuid) {
             m_count++;
         }
 
@@ -90,4 +86,21 @@ private:
     uint64_t m_count{0};
 };
 
-#endif
+/// Custom VCPU.
+///
+/// This tells Bareflank to use our exit handler instead of the one
+/// that Bareflank provides by default.
+///
+std::unique_ptr<vcpu>
+vcpu_factory::make_vcpu(vcpuid::type vcpuid, user_data *data)
+{
+    bfignored(data);
+
+    return std::make_unique<vcpu_intel_x64>(
+               vcpuid,
+               nullptr,
+               nullptr,
+               std::make_unique<exit_handler_cpuidcount>(),
+               nullptr,
+               nullptr);
+}
