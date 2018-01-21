@@ -18,8 +18,8 @@
 
 #include <vcpu/vcpu_factory.h>
 
-#include <vcpu/vcpu_intel_x64.h>
-#include <exit_handler/exit_handler_intel_x64.h>
+#include <vcpu/arch/intel_x64/vcpu.h>
+#include <hve/arch/intel_x64/exit_handler/exit_handler.h>
 
 class exit_handler_cpuidcount : public exit_handler_intel_x64
 {
