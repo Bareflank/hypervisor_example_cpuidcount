@@ -16,7 +16,7 @@ To setup our extension, run the following (assuming Linux):
 ```
 git clone -b dev https://github.com/Bareflank/hypervisor
 git clone -b dev https://github.com/Bareflank/hypervisor_example_cpuidcount.git
-mkdir build
+mkdir build; cd build
 cmake ../hypervisor -DDEFAULT_VMM=example_vmm -DEXTENSION=../hypervisor_example_cpuidcount
 make -j<# cores + 1>
 ```
