@@ -14,27 +14,30 @@ extensions work, please see the following:
 To setup our extension, run the following (assuming Linux):
 
 ```
-cd ~/
-git clone https://github.com/Bareflank/hypervisor.git
-cd ~/hypervisor
-git clone https://github.com/Bareflank/hypervisor_example_cpuidcount.git
-
-./tools/scripts/setup-<xxx>.sh --no-configure
-sudo reboot
-
-~/hypervisor/configure -m ~/hypervisor_example_cpuidcount/bin/cpuidcount.modules
-make
+git clone -b dev https://github.com/Bareflank/hypervisor
+git clone -b dev https://github.com/Bareflank/hypervisor_example_cpuidcount.git
+mkdir build; cd build
+cmake ../hypervisor -DDEFAULT_VMM=example_vmm -DEXTENSION=../hypervisor_example_cpuidcount
+make -j<# cores + 1>
 ```
 
-To test out our extended version of Bareflank, all we need to do is run the
-following make shortcuts:
+To test out our extended version of Bareflank, run the following commands:
 
 ```
-make driver_load
+make driver_quick
 make quick
+```
 
-ARGS="string json '{\"get\":\"count\"}'" make vmcall
+to get status information, use the following:
 
-make stop
+```
+make status
+make dump
+```
+
+to reverse this:
+
+```
+make unload
 make driver_unload
 ```
