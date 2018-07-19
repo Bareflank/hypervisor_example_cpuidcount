@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <bfvmm/vcpu/vcpu_factory.h>
-#include <bfvmm/vcpu/arch/intel_x64/vcpu.h>
+#include <bfvmm/hve/arch/intel_x64/vcpu/vcpu.h>
 
 using namespace ::intel_x64::vmcs;
 
@@ -33,9 +33,9 @@ public:
     vcpu(vcpuid::type id) :
         bfvmm::intel_x64::vcpu{id}
     {
-        exit_handler()->add_dispatch_delegate(
+        exit_handler()->add_handler(
             exit_reason::basic_exit_reason::cpuid,
-            dispatch_delegate_t::create<vcpu, &vcpu::handle_cpuid>(this)
+            ::handler_delegate_t::create<vcpu, &vcpu::handle_cpuid>(this)
         );
     }
 
