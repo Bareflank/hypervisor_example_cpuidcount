@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #include <bfvmm/vcpu/vcpu_factory.h>
-#include <bfvmm/hve/arch/intel_x64/vcpu/vcpu.h>
+#include <bfvmm/hve/arch/intel_x64/vcpu.h>
 
 using namespace ::intel_x64::vmcs;
 
@@ -63,7 +63,7 @@ namespace bfvmm
 {
 
 WEAK_SYM std::unique_ptr<vcpu>
-vcpu_factory::make_vcpu(vcpuid::type vcpuid, bfobject *obj)
+vcpu_factory::make(vcpuid::type vcpuid, bfobject *obj)
 {
     bfignored(obj);
     return std::make_unique<example::intel_x64::vcpu>(vcpuid);
