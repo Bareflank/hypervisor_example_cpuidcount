@@ -33,7 +33,7 @@ public:
     vcpu(vcpuid::type id) :
         bfvmm::intel_x64::vcpu{id}
     {
-        exit_handler()->add_handler(
+        this->add_handler(
             exit_reason::basic_exit_reason::cpuid,
             ::handler_delegate_t::create<vcpu, &vcpu::handle_cpuid>(this)
         );
@@ -43,9 +43,9 @@ public:
     { bfdebug_ndec(0, "cpuid count", m_count); }
 
     bool
-    handle_cpuid(gsl::not_null<bfvmm::intel_x64::vmcs *> vmcs)
+    handle_cpuid(gsl::not_null<vcpu_t *> vcpu)
     {
-        bfignored(vmcs);
+        bfignored(vcpu);
 
         m_count++;
         return false;
